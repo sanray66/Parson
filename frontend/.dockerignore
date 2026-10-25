@@ -1,4 +1,6 @@
 node_modules
-.next
 .git
-*.md
+.next
+.nuxt
+.DS_Store
+out

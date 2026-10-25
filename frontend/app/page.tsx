@@ -155,7 +155,7 @@ export default function PsychologicalProfiler() {
             >
               @alwayswannafly9
             </a>
-          </p>
+          </p> 
 
           {/* Счётчики */}
           <div className="flex items-center gap-5 mt-8">

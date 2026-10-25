@@ -10,7 +10,6 @@ router = APIRouter(
     prefix='/users'
 )
 
-
 @router.get('/', response_model=list[User])
 async def get_users(session: AsyncSession = Depends(db_helper.session_dependebcy)):
     return await user.get_users(session=session)

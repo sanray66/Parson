@@ -1,53 +1,40 @@
-version: '3.8'
-
-networks:
-  dev:
-
-volumes:
-  postgres_data:
-
 services:
+
   nginx:
-    image: nginx:stable-alpine
+    image: nginx:alpine
     ports:
-      - "80:80" 
+      - "8080:8080"
     volumes:
-      - './nginx.conf:/etc/nginx/nginx.conf'
-      - './frontend/out:/usr/share/nginx/html'
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - backend
-    networks:
-      - dev
+      - frontend
 
   backend: 
-    build: 
-      context: ./backend 
+    build: ./backend
     env_file:
-      - .env  
-    networks:
-      - dev
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
 
-  frontend: 
-    build:
-      context: ./frontend 
-    ports:
-      - "3000:3000" 
-    networks:
-      - dev
+  frontend:
+    build: ./frontend
 
   postgres:
     image: postgres:16-alpine
-    container_name: postgres_db
-    env_file:
-      - .env
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
-    ports:
-      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: always
-    networks:
-      - dev
+      - "postgres_data:/var/lib/postgresql/data"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s     
+      timeout: 5s      
+      retries: 5       
+      start_period: 5s 
+
+volumes:
+  postgres_data:

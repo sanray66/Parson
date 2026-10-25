@@ -81,7 +81,7 @@ async def get_psychological_analysis(user_messages_in: UserMessageCreate) -> str
                 "X-Title": "PsychologyApp",             
             },
             json={
-                "model": "nvidia/nemotron-3-super-120b-a12b:free", 
+                "model": "nvidia/nemotron-3-ultra-550b-a55b:free", 
                 "messages": [
                     {"role": "system", "content": SYSTEM_INSTRUCTION},
                     {"role": "user", "content": prompt},
